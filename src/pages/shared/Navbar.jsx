@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
-
+import AuthContext from "../../context/AuthContext/AuthContext";
+import logo from '../../assets/logo.png'
 const Navbar = () => {
+  const {user, signOutUser} = useContext(AuthContext)
 
 
-    const links =<>
-   <NavLink to="/">Home</NavLink>
-    
+  const handleSignOut = () =>{
+    signOutUser()
+    .then(() =>{
+      console.log("Successful sign out");
+    })
+    .catch(error =>{
+      console.log("failed to sign out");
+    })
+  }
+  const links = (
+    <>
+      <li><NavLink to="/">Home</NavLink></li>
+      <li><NavLink to="/">Home</NavLink></li>
+      <li><NavLink to="/">Home</NavLink></li>
     </>
+  );
   return (
     <div>
       <div className="navbar bg-base-100">
@@ -33,21 +47,27 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-             {links}
+              {links}
             </ul>
           </div>
-          <Link to="/" className="btn btn-ghost text-xl">Job Portal</Link>
+          <Link to="/" className="btn btn-ghost text-xl">
+            <img className="w-12" src={logo} alt="" />
+            <h3 className="text-3xl">Job Portal</h3>
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-           {links}
-          </ul>
+          <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
+          {user ? <>
+            <button onClick={handleSignOut}>Sign Out</button>
+          </> : <>
             <Link to="/register">Register</Link>
           <Link to="/signIn">
-          <button className="btn">Sign In</button>
+            <button className="btn">Sign In</button>
           </Link>
+          </>}
+         
         </div>
       </div>
     </div>
