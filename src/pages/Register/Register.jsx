@@ -4,6 +4,7 @@ import registerLottieData from "../../assets/lottie/register.json";
 import AuthContext from "../../context/AuthContext/AuthContext";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import SocialLogin from "../shared/SocialLogin";
 
 
 const Register = () => {
@@ -79,6 +80,8 @@ const Register = () => {
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary">Register</button>
+              
+             <SocialLogin></SocialLogin>
             </div>
           <div>
             <Link to="/signIn">I have an Account <span className="font-bold text-red-700">Sign in</span></Link>
