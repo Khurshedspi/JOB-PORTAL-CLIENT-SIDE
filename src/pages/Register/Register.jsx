@@ -3,6 +3,8 @@ import React, { useContext, useState } from "react";
 import registerLottieData from "../../assets/lottie/register.json";
 import AuthContext from "../../context/AuthContext/AuthContext";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+
 
 const Register = () => {
   const { createUser } = useContext(AuthContext);
@@ -73,16 +75,16 @@ const Register = () => {
               {errorMessage && (
                 <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
               )}
-              <label className="label">
-                <a href="#" className="label-text-alt link link-hover">
-                  Forgot password?
-                </a>
-              </label>
+           
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary">Register</button>
             </div>
+          <div>
+            <Link to="/signIn">I have an Account <span className="font-bold text-red-700">Sign in</span></Link>
+          </div>
           </form>
+
         </div>
       </div>
     </div>
