@@ -1,8 +1,8 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 
 const JobDetails = () => {
-  const {title, deadline, company } = useLoaderData();
+  const { _id, title, deadline, company } = useLoaderData();
 
   return (
     <div className="card bg-primary text-primary-content w-96">
@@ -11,7 +11,9 @@ const JobDetails = () => {
         <p>{title}</p>
         {deadline}
         <div className="card-actions justify-center mt-4">
-          <button className="btn">Apply Now</button>
+          <Link to={`/jobApply/${_id}`}>
+            <button className="btn">Apply Now</button>
+          </Link>
         </div>
       </div>
     </div>
