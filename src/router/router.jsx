@@ -3,6 +3,7 @@ import MainLayout from "../layout/MainLayout";
 import Home from "../pages/Home/Home";
 import Register from "../pages/Register/Register";
 import SignIn from "../pages/SignIn/SignIn";
+import JobDetails from "../pages/Home/JobDetails/JobDetails";
 
 const router = createBrowserRouter([
   {
@@ -10,20 +11,24 @@ const router = createBrowserRouter([
     element: <MainLayout></MainLayout>,
     errorElement: <h3>Route Not Found</h3>,
     children: [
-        {
-            path: "/",
-            element: <Home></Home>, 
-        },
-        {
-            path: "/register",
-            element: <Register></Register>
-        },
-        {
-          path: "/signIn",
-          element: <SignIn></SignIn>
-        }
-
-    ]
+      {
+        path: "/",
+        element: <Home></Home>,
+      },
+      {
+        path: "/jobs/:id",
+        element: <JobDetails></JobDetails>,
+        loader: ({params}) => fetch(`http://localhost:5000/jobs/${params.id}`)
+      },
+      {
+        path: "/register",
+        element: <Register></Register>,
+      },
+      {
+        path: "/signIn",
+        element: <SignIn></SignIn>,
+      },
+    ],
   },
 ]);
 
