@@ -1,17 +1,45 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import useAuth from "../../hooks/useAuth";
 
 const AddJob = () => {
-    const handleAddJob = e =>{
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        // console.log(formData.entries());
-        const initialData = Object.fromEntries(formData.entries());
-        // console.log(initialData);
-        const {min, max, currency, ...newJob} = initialData;
-        console.log(newJob);
-        newJob.salaryRange = {min, max, currency}
-        console.log(newJob);
-    }
+  const {user} = useAuth();
+  const navigate = useNavigate();
+  const handleAddJob = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    // console.log(formData.entries());
+    const initialData = Object.fromEntries(formData.entries());
+    // console.log(initialData);
+    const { min, max, currency, ...newJob } = initialData;
+    // console.log(newJob);
+    newJob.salaryRange = { min, max, currency };
+    newJob.requirements = newJob.requirements.split("\n");
+    newJob.responsibilities = newJob.responsibilities.split("\n");
+    console.log(newJob);
+
+    fetch('http://localhost:5000/jobs', {
+      method: 'POST', 
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(newJob)
+    })
+    .then(res => res.json())
+    .then(data =>{
+       if(data.insertedId){
+                  Swal.fire({
+                      position: "top-center",
+                      icon: "success",
+                      title: "Job has been Added",
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
+                    navigate('/myApplications')
+                }
+    })
+  };
   return (
     <div>
       <form onSubmit={handleAddJob} className="card-body">
@@ -46,8 +74,12 @@ const AddJob = () => {
           <label className="label">
             <span className="label-text">Job Type</span>
           </label>
-          <select name="job_type" className="select select-ghost w-full max-w-xs">
-            <option disabled selected>
+          <select
+            name="job_type"
+            defaultValue="Pick a Job Type"
+            className="select select-ghost w-full max-w-xs"
+          >
+            <option disabled>
               Pick a Job Type
             </option>
             <option>Full Time</option>
@@ -60,8 +92,12 @@ const AddJob = () => {
           <label className="label">
             <span className="label-text">Job Field</span>
           </label>
-          <select name="job_field" className="select select-ghost w-full max-w-xs">
-            <option disabled selected>
+          <select
+          defaultValue="Pick a Job Field"
+            name="job_field"
+            className="select select-ghost w-full max-w-xs"
+          >
+            <option disabled>
               Pick a Job Field
             </option>
             <option>Engineering</option>
@@ -97,8 +133,12 @@ const AddJob = () => {
           {/* Currency  */}
 
           <div className="form-control">
-            <select name="currency" className="select select-ghost w-full max-w-xs">
-              <option disabled selected>
+            <select 
+            defaultValue="Currency"
+              name="currency"
+              className="select select-ghost w-full max-w-xs"
+            >
+              <option disabled>
                 Currency
               </option>
               <option>BDT</option>
@@ -170,8 +210,24 @@ const AddJob = () => {
           </label>
           <input
             type="email"
+            defaultValue={user.email}
             placeholder="HR Email"
             name="hr_email"
+            className="input input-bordered"
+            required
+          />
+        </div>
+
+        {/* Application Deadline  */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Deadline</span>
+          </label>
+          <input
+            type="date"
+            defaultValue={user.email}
+            placeholder="Deadline"
+            name="applicationDeadline"
             className="input input-bordered"
             required
           />
