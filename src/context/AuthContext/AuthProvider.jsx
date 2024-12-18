@@ -42,7 +42,7 @@ const AuthProvider = ({ children }) => {
         const user = { email: currentUser.email };
         // for remove token after logout starts here
         axios
-          .post("http://localhost:5000/jwt", user, {withCredentials:true} )
+          .post("https://job-portal-server-side-phi.vercel.app/jwt", user, {withCredentials:true} )
           .then((res) => {
             console.log(res.data)
             setLoading(false);
@@ -50,7 +50,7 @@ const AuthProvider = ({ children }) => {
           });
       }
       else{
-        axios.post('http://localhost:5000/logout', {}, {
+        axios.post('https://job-portal-server-side-phi.vercel.app/logout', {}, {
           withCredentials:true
         })
         .then(res => {
