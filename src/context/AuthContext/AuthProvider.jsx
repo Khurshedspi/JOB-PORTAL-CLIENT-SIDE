@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import AuthContext from "./AuthContext";
 import auth from "./../../firebase/firebase.init";
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
+import axios from "axios";
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -15,32 +23,54 @@ const AuthProvider = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // sign in 
-  const signInUser = (email, password)=>{
+  // sign in
+  const signInUser = (email, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password)
-  }
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
-  const signInWithGoogle = () =>{
+  const signInWithGoogle = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
-  }
+  };
 
-
-  useEffect(() =>{
-    const unsubscribe = onAuthStateChanged(auth, currentUser =>{
-        setUser(currentUser);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      console.log("state captured", currentUser?.email);
+      if (currentUser?.email) {
+        const user = { email: currentUser.email };
+        // for remove token after logout starts here
+        axios
+          .post("http://localhost:5000/jwt", user, {withCredentials:true} )
+          .then((res) => {
+            console.log(res.data)
+            setLoading(false);
+          
+          });
+      }
+      else{
+        axios.post('http://localhost:5000/logout', {}, {
+          withCredentials:true
+        })
+        .then(res => {
+          console.log('logout', res.data)
         setLoading(false);
-    })
-    return() =>{
-        unsubscribe();
-    }
-  })
+        })
+      }
+ // for remove token after logout ends here
 
-  const signOutUser = () =>{
+
+    });
+    return () => {
+      unsubscribe();
+    };
+  });
+
+  const signOutUser = () => {
     setLoading(true);
     return signOut(auth);
-  }
+  };
 
   const authInfo = {
     user,
